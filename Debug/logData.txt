@@ -1,0 +1,26 @@
+Service Installation Successfull.
+Open SC Manager Success.
+Open Service Success.
+Installation Success.
+
+Open SC Manager Success.
+Open Service Success.
+Query Service Success.
+Service Stopped.
+Start Service Success.
+Query Service Success.
+Service Stopped.
+Service Start Success.
+
+Open SC Manager Success.
+Open Service Success.
+Query Service Success.
+Control Service Success.
+Service Stop Success.
+
+Open SC Manager Success.
+Open Service Success.
+Delete Service Successfully.
+Service Delete Success.
+
+------------------------------------------------------------------------------------

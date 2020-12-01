@@ -1,7 +1,6 @@
 
 #include<Windows.h>
 #include<iostream>
-
 #include <fstream>
 
 using namespace std;
@@ -21,14 +20,68 @@ void SvcInstall(void);
 void SvcDelete(void);
 void SvcStart(void);
 void SvcStop(void);
+void fileWriter(const char *str);
 
+HANDLE hAppend;
+DWORD dwBytesWritten;
+DWORD dwBytesToWrite;
+BOOL bErrorFlag = FALSE;
+
+void initFileWriter() {
+
+	hAppend = CreateFile(TEXT("logData.txt"), // open Two.txt
+		FILE_APPEND_DATA,         // open for writing
+		FILE_SHARE_READ,          // allow multiple readers
+		NULL,                     // no security
+		OPEN_ALWAYS,              // open or create
+		FILE_ATTRIBUTE_NORMAL,    // normal file
+		NULL);
+
+	if (hAppend == INVALID_HANDLE_VALUE)
+	{
+		printf("Could not open Two.txt.");
+		return;
+	}
+}
+
+void closeFileWriter() {
+	CloseHandle(hAppend);
+}
+
+void fileWriter(const char *str) {
+	
+	dwBytesToWrite = (DWORD)strlen(str);
+	bErrorFlag = WriteFile(
+		hAppend,           // open file handle
+		str,      // start of data to write
+		dwBytesToWrite,  // number of bytes to write
+		&dwBytesWritten, // number of bytes that were written
+		NULL);
+
+	if (!bErrorFlag)
+	{
+		//DisplayError(TEXT("WriteFile"));
+		printf("Terminal failure: Unable to write to file.\n");
+	}
+	else
+	{
+		if (dwBytesWritten != dwBytesToWrite)
+		{
+			printf("Error: dwBytesWritten != dwBytesToWrite\n");
+		}
+		else
+		{
+			printf(("Wrote %d bytes to %s successfully.\n"), dwBytesWritten, str);
+		}
+	}
+
+
+}
 
 
 int main(int argc, char *argv[]) {
 
-	freopen("log.txt", "a", stdout);
-
-
+	initFileWriter();
 
 	cout << endl <<"MAIN FUNCTION START" << endl;
 	bool serviceCtrlDispatcher = FALSE;
@@ -36,19 +89,25 @@ int main(int argc, char *argv[]) {
 	if (lstrcmpA(argv[1], "install" ) == 0) {
 		SvcInstall();
 		cout << "Installation Success" << endl;
+		fileWriter("Installation Success.\n\n");
 	}
 	else if (lstrcmpA(argv[1], "start") == 0) {
 		SvcStart();
 		cout << "Service Start Success" << endl;
+		fileWriter("Service Start Success.\n\n");
 	}
 	else if (lstrcmpA(argv[1], "stop") == 0) {
 		SvcStop();
 		cout << "Service Stop Success" << endl;
+		fileWriter("Service Stop Success.\n\n");
 	}
 	else if (lstrcmpA(argv[1], "delete") == 0) {
 		SvcDelete();
 		cout << "Service Delete Success" << endl;
-		cout << "------------------------------------------------------------------------------------";
+		//cout << "------------------------------------------------------------------------------------";
+		fileWriter("Service Delete Success.\n\n");
+		fileWriter("------------------------------------------------------------------------------------\n");
+
 	}
 	else {
 
@@ -62,12 +121,17 @@ int main(int argc, char *argv[]) {
 
 		if (!serviceCtrlDispatcher) {
 			cout << "Service dispatcher failed" << GetLastError() << endl;
+			fileWriter("Service Dispatcher Failed.\n");
+
 		}
 		else {
 			cout << "Service dispatcher Success" << endl;
+			fileWriter("Service Dispatcher Success.\n");
+
 		}
 	}
 	//system("PAUSE");
+	closeFileWriter();
 
 	return 0;
 }
@@ -83,9 +147,13 @@ VOID WINAPI SvcMain(DWORD dwArgc, LPTSTR* lpszArgv){
 
 	if(gSvcStatusHandle == NULL){
 		cout << "Handler Failed" << GetLastError() << endl;
+		fileWriter("Handler Failed.\n");
+
 	}
 	else {
 		cout << "Handler Success" << endl;
+		fileWriter("Handler Success.\n");
+
 	}
 	
 	gSvcStatus.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
@@ -97,9 +165,13 @@ VOID WINAPI SvcMain(DWORD dwArgc, LPTSTR* lpszArgv){
 
 	if(!serviceStatus) {
 		cout << "INTIAL SETUP FAILED." << GetLastError() << endl;
+		fileWriter("Initial Setup Failed.\n");
+
 	}
 	else {
 		cout << "INITIAL SETUP SUCCESS." << endl;
+		fileWriter("Initial Setup Success.\n");
+
 	}
 
 	SvcInit(dwArgc, lpszArgv);
@@ -118,6 +190,8 @@ VOID WINAPI ServiceCtrlHandler(DWORD dwControl) {
 		{
 			ReportSvcStatus(SERVICE_STOPPED, NO_ERROR, 0);
 			cout << "Service Stopped" << endl;
+			fileWriter("Service Stopped.\n");
+
 		}
 
 		default: break;
@@ -188,9 +262,13 @@ VOID ReportSvcStatus(DWORD dwCurrentState, DWORD dwWin32ExitCode, DWORD dwWaitHi
 
 	if (!setServiceStatus) {
 		cout << "Service Status Failed" << GetLastError() << endl;
+		fileWriter("Service Status Failed.\n");
+
 	}
 	else {
 		cout << "Service Status Success" << endl;
+		fileWriter("Service Status Success.\n");
+
 	}
 
 	cout << "Report Service End" << endl;
@@ -207,18 +285,26 @@ void SvcInstall(void) {
 
 	if (dwGetModuleFileName == 0) {
 		cout << "Service Installation failed" << GetLastError() << endl;
+		fileWriter("Service Installation Failed.\n");
+
 	}
 	else {
 
 		cout << "Service Installation SuccessFull" << endl;
+		fileWriter("Service Installation Successfull.\n");
+
 	}
 	schSCManager = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
 
 	if (schSCManager == NULL) {
 		cout << "Open SC Manager failed" << GetLastError() << endl;
+		fileWriter("Open SC Manager Failed.\n");
+
 	}
 	else {
 		cout << "Open SC Manager Success" << endl;
+		fileWriter("Open SC Manager Success.\n");
+
 	}
 
 	schService = CreateService(schSCManager, SERVICE_NAME, SERVICE_NAME, SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS, SERVICE_DEMAND_START,
@@ -228,10 +314,14 @@ void SvcInstall(void) {
 
 	if (schService == NULL) {
 		cout << "Create Service Failed" << GetLastError() << endl;
+		fileWriter("Open Service Failed.\n");
+
 		CloseServiceHandle(schSCManager);
 	}
 	else {
 		cout << "Create Service Success" << endl;
+		fileWriter("Open Service Success.\n");
+
 	}
 
 	CloseServiceHandle(schService);
@@ -248,7 +338,7 @@ void SvcDelete(void) {
 	SC_HANDLE schSCManager = NULL;
 	SC_HANDLE schService = NULL;
 	BOOL bDeleteService = FALSE;
-	SERVICE_STATUS ssStatus;
+	//SERVICE_STATUS ssStatus;
 
 	// Get a handle to the SCM database. 
 
@@ -260,9 +350,13 @@ void SvcDelete(void) {
 	if (NULL == schSCManager)
 	{
 		cout << "OpenSCManager failed" <<  GetLastError() << endl;
+		fileWriter("Open SC Manager failed.\n");
+
 	}
 	else {
 		cout << "Open SC Manager Success" << endl;
+		fileWriter("Open SC Manager Success.\n");
+
 	}
 
 	// Get a handle to the service.
@@ -275,11 +369,15 @@ void SvcDelete(void) {
 	if (schService == NULL)
 	{
 		printf("OpenService failed (%d)\n", GetLastError());
+		fileWriter("Open Service failed.\n");
+
 		CloseServiceHandle(schSCManager);
 		return;
 	}
 	else {
 		cout << "Open Service Success" << endl;
+		fileWriter("Open Service Success.\n");
+
 	}
 
 	// Delete the service.
@@ -287,8 +385,14 @@ void SvcDelete(void) {
 	if (!DeleteService(schService))
 	{
 		printf("DeleteService failed (%d)\n", GetLastError());
+		fileWriter("Delete Service failed.\n");
+
 	}
-	else printf("Service deleted successfully\n");
+	else {
+		printf("Service deleted successfully\n");
+		fileWriter("Delete Service Successfully.\n");
+
+	}
 
 	CloseServiceHandle(schService);
 	CloseServiceHandle(schSCManager);
@@ -313,9 +417,13 @@ void SvcStart(void) {
 	if (NULL == schSCManager)
 	{
 		cout << "OpenSCManager failed" << GetLastError() << endl;
+		fileWriter("Open SC Manager Failed.\n");
+
 	}
 	else {
 		cout << "Open SC Manager Success" << endl;
+		fileWriter("Open SC Manager Success.\n");
+
 	}
 
 
@@ -327,11 +435,15 @@ void SvcStart(void) {
 	if (schService == NULL)
 	{
 		printf("OpenService failed (%d)\n", GetLastError());
+		fileWriter("Open Service Failed.\n");
+
 		CloseServiceHandle(schSCManager);
 		return;
 	}
 	else {
 		cout << "Open Service Success" << endl;
+		fileWriter("Open Service Success.\n");
+
 	}
 
 	bQueryServiceStatus = QueryServiceStatusEx(
@@ -341,16 +453,24 @@ void SvcStart(void) {
 	);
 	if (!bQueryServiceStatus) {
 		cout << "QueryService Failed" << GetLastError() << endl;
+		fileWriter("Query Service Failed.\n");
+
 	}
 	else {
 		cout << "QueryService Success" << endl;
+		fileWriter("Query Service Success.\n");
+
 	}
 
 	if ((SvcStatusProcess.dwCurrentState != SERVICE_STOPPED) && (SvcStatusProcess.dwCurrentState != SERVICE_STOP_PENDING)) {
 		cout << "Service is Running" << endl;
+		fileWriter("Service is Running....\n");
+
 	}
 	else {
 		cout << "Service Stopped" << endl;
+		fileWriter("Service Stopped.\n");
+
 	}
 
 	while (SvcStatusProcess.dwCurrentState == SERVICE_STOP_PENDING) {
@@ -362,11 +482,15 @@ void SvcStart(void) {
 
 		if (!bQueryServiceStatus) {
 			cout << "QueryService failed" << GetLastError() << endl;
+			fileWriter("Query Service Failed.\n");
+
 			CloseServiceHandle(schService);
 			CloseServiceHandle(schSCManager);
 		}
 		else {
 			cout << "QueryService Success" << endl;
+			fileWriter("Query Service Success.\n");
+
 		}
 
 	}
@@ -375,11 +499,15 @@ void SvcStart(void) {
 		schService, NULL, NULL);
 	if (!bStartService) {
 		cout << "Startservice failed" << GetLastError() << endl;
+		fileWriter("Start Service failed.\n");
+
 		CloseServiceHandle(schService);
 		CloseServiceHandle(schSCManager);
 	}
 	else {
 		cout << "Start Service Success" << endl;
+		fileWriter("Start Service Success.\n");
+
 	}
 
 	bQueryServiceStatus = QueryServiceStatusEx(
@@ -390,18 +518,26 @@ void SvcStart(void) {
 
 	if (!bQueryServiceStatus) {
 		cout << "QueryService failed" << GetLastError() << endl;
+		fileWriter("Query Service Failed.\n");
+
 		CloseServiceHandle(schService);
 		CloseServiceHandle(schSCManager);
 	}
 	else {
 		cout << "QueryService Success" << endl;
+		fileWriter("Query Service Success.\n");
+
 	}
 
 	if (SvcStatusProcess.dwCurrentState == SERVICE_RUNNING) {
 		cout << "Service Running" << endl;
+		fileWriter("Service is Running....\n");
+
 	}
 	else {
 		cout << "Service Running Failed" << GetLastError() <<  endl;
+		fileWriter("Service Stopped.\n");
+
 		CloseServiceHandle(schService);
 		CloseServiceHandle(schSCManager);
 	}
@@ -433,9 +569,13 @@ void SvcStop(void) {
 	if (NULL == schSCManager)
 	{
 		cout << "OpenSCManager failed" << GetLastError() << endl;
+		fileWriter("Open SC Manager Failed.\n");
+
 	}
 	else {
 		cout << "Open SC Manager Success" << endl;
+		fileWriter("Open SC Manager Success.\n");
+
 	}
 
 
@@ -447,11 +587,15 @@ void SvcStop(void) {
 	if (schService == NULL)
 	{
 		printf("OpenService failed (%d)\n", GetLastError());
+		fileWriter("Open Service Failed.\n");
+
 		CloseServiceHandle(schSCManager);
 		return;
 	}
 	else {
 		cout << "Open Service Success" << endl;
+		fileWriter("Open Service Success.\n");
+
 	}
 
 
@@ -463,11 +607,15 @@ void SvcStop(void) {
 
 	if (!bQueryServiceStatus) {
 		cout << "QueryService failed" << GetLastError() << endl;
+		fileWriter("Query Service Failed.\n");
+
 		CloseServiceHandle(schService);
 		CloseServiceHandle(schSCManager);
 	}
 	else {
 		cout << "QueryService Success" << endl;
+		fileWriter("Query Service Success.\n");
+
 	}
 
 
@@ -479,9 +627,13 @@ void SvcStop(void) {
 
 	if (bControlService) {
 		cout << "Control Service succes" << endl;
+		fileWriter("Control Service Success.\n");
+
 	}
 	else {
 		cout << "Control Service Failed" << GetLastError() << endl;
+		fileWriter("Control Service Failed.\n");
+
 		CloseServiceHandle(schService);
 		CloseServiceHandle(schSCManager);
 
@@ -496,19 +648,27 @@ void SvcStop(void) {
 
 		if (bQueryServiceStatus) {
 			cout << "QueryService failed" << GetLastError() << endl;
+			fileWriter("Query Service Failed.\n");
+
 			CloseServiceHandle(schService);
 			CloseServiceHandle(schSCManager);
 		}
 		else {
 			cout << "QueryService Success" << endl;
+			fileWriter("Query Service Success.\n");
+
 		}
 
 		if (SvcStatusProcess.dwCurrentState == SERVICE_STOPPED) {
 			cout << "Service Stopped Successfully" << endl;
+			fileWriter("Service Stopped Successfully.\n");
+
 			break;
 		}
 		else {
 			cout << "Service Stopped Failed" << GetLastError() << endl;
+			fileWriter("Service Stopped Failed.\n");
+
 
 			CloseServiceHandle(schService);
 			CloseServiceHandle(schSCManager);
