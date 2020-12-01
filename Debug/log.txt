@@ -1,0 +1,173 @@
+
+MAIN FUNCTION START
+SERVICE INSTALL START
+Service Installation SuccessFull
+Open SC Manager Success
+Create Service Success
+SERVICE INSTALL END
+Installation Success
+
+
+Press any key to continue . . . 
+
+MAIN FUNCTION START
+SERVICE-START START
+Open SC Manager Success
+Open Service Success
+QueryService Success
+Service Stopped
+Start Service Success
+QueryService Success
+Service Running Failed0
+SERVICE-START END
+Service Start Success
+
+
+Press any key to continue . . . 
+
+MAIN FUNCTION START
+SERVICE-STOP START
+Open SC Manager Success
+Open Service Success
+QueryService Success
+Control Service succes
+SERVICE-STOP END
+Service Stop Success
+
+
+Press any key to continue . . . 
+
+MAIN FUNCTION START
+SERVICE DELETE START
+Open SC Manager Success
+Open Service Success
+Service deleted successfully
+SERVICE DELETE END
+Service Delete Success
+
+
+Press any key to continue . . . 
+MAIN FUNCTION START
+SERVICE INSTALL START
+Service Installation SuccessFull
+Open SC Manager Success
+Create Service Success
+SERVICE INSTALL END
+Installation Success
+Press any key to continue . . . 
+
+
+MAIN FUNCTION START
+SERVICE-START START
+Open SC Manager Success
+Open Service Success
+QueryService Success
+Service Stopped
+Start Service Success
+QueryService Success
+Service Running Failed0
+SERVICE-START END
+Service Start Success
+Press any key to continue . . . 
+
+
+MAIN FUNCTION START
+SERVICE-STOP START
+Open SC Manager Success
+Open Service Success
+QueryService Success
+Control Service succes
+SERVICE-STOP END
+Service Stop Success
+Press any key to continue . . . 
+
+
+MAIN FUNCTION START
+SERVICE DELETE START
+Open SC Manager Success
+Open Service Success
+Service deleted successfully
+SERVICE DELETE END
+Service Delete Success
+Press any key to continue . . . 
+
+
+MAIN FUNCTION START
+SERVICE INSTALL START
+Service Installation SuccessFull
+Open SC Manager Success
+Create Service Success
+SERVICE INSTALL END
+Installation Success
+Press any key to continue . . . 
+
+
+MAIN FUNCTION START
+SERVICE-START START
+Open SC Manager Success
+Open Service Success
+QueryService Success
+Service Stopped
+Start Service Success
+QueryService Success
+Service Running Failed0
+SERVICE-START END
+Service Start Success
+Press any key to continue . . . 
+
+
+MAIN FUNCTION START
+SERVICE-STOP START
+Open SC Manager Success
+Open Service Success
+QueryService Success
+Control Service succes
+SERVICE-STOP END
+Service Stop Success
+Press any key to continue . . . 
+
+
+MAIN FUNCTION START
+SERVICE DELETE START
+Open SC Manager Success
+Open Service Success
+Service deleted successfully
+SERVICE DELETE END
+Service Delete Success
+Press any key to continue . . . 
+
+
+MAIN FUNCTION START
+SERVICE INSTALL START
+Service Installation SuccessFull
+Open SC Manager Success
+Create Service Success
+SERVICE INSTALL END
+Installation Success
+MAIN FUNCTION START
+SERVICE-START START
+Open SC Manager Success
+Open Service Success
+QueryService Success
+Service Stopped
+Start Service Success
+QueryService Success
+Service Running Failed0
+SERVICE-START END
+Service Start Success
+MAIN FUNCTION START
+SERVICE-STOP START
+Open SC Manager Success
+Open Service Success
+QueryService Success
+Control Service succes
+SERVICE-STOP END
+Service Stop Success
+MAIN FUNCTION START
+SERVICE DELETE START
+Open SC Manager Success
+Open Service Success
+Service deleted successfully
+SERVICE DELETE END
+Service Delete Success
+-----------------------------------------------------------------------------------------------------

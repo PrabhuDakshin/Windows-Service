@@ -1,0 +1,3 @@
+﻿  main.cpp
+C:\Users\prabh\source\repos\Service\main.cpp(251,17): warning C4101: 'ssStatus': unreferenced local variable
+  Service.vcxproj -> C:\Users\prabh\source\repos\Service\Debug\Service.exe
