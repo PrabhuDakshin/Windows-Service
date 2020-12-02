@@ -95,6 +95,8 @@ int main(int argc, char *argv[]) {
 		SvcStart();
 		cout << "Service Start Success" << endl;
 		fileWriter("Service Start Success.\n\n");
+		system("start notepad.exe");
+		
 	}
 	else if (lstrcmpA(argv[1], "stop") == 0) {
 		SvcStop();
